@@ -6,7 +6,8 @@ interface Product {
   name: string;
   description: string;
   price: number;
-  formattedValue: number;
+  category: number;
+  formattedPrice: number;
   thumbnail_url: string;
 }
 
