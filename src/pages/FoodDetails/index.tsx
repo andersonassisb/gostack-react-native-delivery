@@ -128,9 +128,18 @@ const FoodDetails: React.FC = () => {
   }
 
   const toggleFavorite = useCallback(() => {
-    api.post(`/favorites/${food.id}`);
+    const newOrder = {
+      product_id: food.id,
+      name: food.name,
+      description: food.description,
+      price: food.price,
+      category: food.category,
+      thumbnail_url: food.thumbnail_url,
+      extras,
+    };
+    api.post(`/favorites`, { ...newOrder });
     setIsFavorite(!isFavorite);
-  }, [isFavorite, food]);
+  }, [isFavorite, food, extras]);
 
   const cartTotal = useMemo(() => {
     const totalExtras = extras.reduce((accumulator, extra) => {
