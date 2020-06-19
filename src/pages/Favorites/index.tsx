@@ -23,6 +23,7 @@ interface Food {
   name: string;
   description: string;
   price: number;
+  category: number;
   thumbnail_url: string;
   formattedPrice: string;
 }
@@ -32,7 +33,20 @@ const Favorites: React.FC = () => {
 
   useEffect(() => {
     async function loadFavorites(): Promise<void> {
-      // Load favorite foods from api
+      const response = await api.get('/favorites');
+      let newFavorites = response.data;
+
+      newFavorites = newFavorites.map((order: Food) => ({
+        id: order.id,
+        name: order.name,
+        description: order.description,
+        price: order.price,
+        category: order.category,
+        thumbnail_url: order.thumbnail_url,
+        formattedPrice: formatValue(order.price),
+      }));
+
+      setFavorites(newFavorites);
     }
 
     loadFavorites();
