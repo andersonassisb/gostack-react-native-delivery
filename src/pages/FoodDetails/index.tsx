@@ -55,8 +55,9 @@ interface Food {
   name: string;
   description: string;
   price: number;
-  image_url: string;
+  category: number;
   formattedPrice: string;
+  thumbnail_url: string;
   extras: Extra[];
 }
 
@@ -75,7 +76,20 @@ const FoodDetails: React.FC = () => {
     async function loadFood(): Promise<void> {
       const { id } = routeParams;
       const response = await api.get(`/foods/${id}`);
-      setFood(response.data);
+      const { data } = response;
+
+      const newFood = {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        category: data.category,
+        thumbnail_url: data.thumbnail_url,
+        formattedPrice: formatValue(data.price),
+        extras: data.extras,
+      };
+
+      setFood(newFood);
       const newExtras = response.data.extras.map((e: Extra) => ({
         ...e,
         quantity: 0,
@@ -120,7 +134,6 @@ const FoodDetails: React.FC = () => {
 
   const cartTotal = useMemo(() => {
     const totalExtras = extras.reduce((accumulator, extra) => {
-      console.log(extra);
       const subTotal = extra.value * extra.quantity;
       return accumulator + subTotal;
     }, 0);
@@ -129,7 +142,18 @@ const FoodDetails: React.FC = () => {
   }, [extras, food, foodQuantity]);
 
   async function handleFinishOrder(): Promise<void> {
-    await api.post('/orders');
+    const newOrder = {
+      product_id: food.id,
+      name: food.name,
+      description: food.description,
+      price: food.price,
+      category: food.category,
+      thumbnail_url: food.thumbnail_url,
+      extras,
+    };
+    await api.post('/orders', {
+      ...newOrder,
+    });
   }
 
   // Calculate the correct icon name
@@ -163,7 +187,7 @@ const FoodDetails: React.FC = () => {
               <Image
                 style={{ width: 327, height: 183 }}
                 source={{
-                  uri: food.image_url,
+                  uri: food.thumbnail_url,
                 }}
               />
             </FoodImageContainer>
