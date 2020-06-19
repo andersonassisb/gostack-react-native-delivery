@@ -33,7 +33,6 @@ interface Food {
   name: string;
   description: string;
   price: number;
-  category: number;
   thumbnail_url: string;
   formattedPrice: string;
 }
@@ -73,7 +72,6 @@ const Dashboard: React.FC = () => {
         name: food.name,
         description: food.description,
         price: food.price,
-        category: food.category,
         thumbnail_url: food.thumbnail_url,
         formattedPrice: formatValue(food.price),
       }));
