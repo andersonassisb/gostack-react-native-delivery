@@ -61,25 +61,23 @@ const Dashboard: React.FC = () => {
     async function loadFoods(): Promise<void> {
       let path = `/foods`;
       if (selectedCategory)
-        path = path.concat(
-          `?category_like=${selectedCategory}&name_like=${searchValue}`,
-        );
+        path = path.concat(`?category_like=${selectedCategory}`);
       else path = path.concat(`?name_like=${searchValue}`);
 
-      const response = await api.get(path);
+      await api.get(path).then(response => {
+        let newFoods = response.data;
 
-      let newFoods = response.data;
+        newFoods = newFoods.map((food: Food) => ({
+          id: food.id,
+          name: food.name,
+          description: food.description,
+          price: food.price,
+          thumbnail_url: food.thumbnail_url,
+          formattedPrice: formatValue(food.price),
+        }));
 
-      newFoods = newFoods.map((food: Food) => ({
-        id: food.id,
-        name: food.name,
-        description: food.description,
-        price: food.price,
-        thumbnail_url: food.thumbnail_url,
-        formattedPrice: formatValue(food.price),
-      }));
-
-      setFoods(newFoods);
+        setFoods(newFoods);
+      });
     }
 
     loadFoods();
@@ -87,7 +85,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadCategories(): Promise<void> {
-      const response = await api.get(`/categories`);
+      const response = await api.get('/categories');
       setCategories(response.data);
     }
 
