@@ -64,20 +64,20 @@ const Dashboard: React.FC = () => {
         path = path.concat(`?category_like=${selectedCategory}`);
       else path = path.concat(`?name_like=${searchValue}`);
 
-      await api.get(path).then(response => {
-        let newFoods = response.data;
+      const response = await api.get(path);
 
-        newFoods = newFoods.map((food: Food) => ({
-          id: food.id,
-          name: food.name,
-          description: food.description,
-          price: food.price,
-          thumbnail_url: food.thumbnail_url,
-          formattedPrice: formatValue(food.price),
-        }));
+      let newFoods = response.data;
 
-        setFoods(newFoods);
-      });
+      newFoods = newFoods.map((food: Food) => ({
+        id: food.id,
+        name: food.name,
+        description: food.description,
+        price: food.price,
+        thumbnail_url: food.thumbnail_url,
+        formattedPrice: formatValue(food.price),
+      }));
+
+      setFoods(newFoods);
     }
 
     loadFoods();
