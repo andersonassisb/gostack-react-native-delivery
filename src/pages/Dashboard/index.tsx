@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
   }, [selectedCategory, searchValue]);
 
   function handleSelectCategory(id: number): void {
-    if (!selectedCategory) setSelectedCategory(id);
+    if (selectedCategory !== id) setSelectedCategory(id);
     else setSelectedCategory(undefined);
   }
 
